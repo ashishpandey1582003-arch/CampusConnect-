@@ -137,12 +137,14 @@ export const registerAdmin = asyncHandler(async (req, res, next) => {
 // @route   POST /api/auth/student/login
 // @access  Public
 export const loginStudent = asyncHandler(async (req, res, next) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
 
   // Validate email & password
   if (!email || !password) {
     return next(new ErrorResponse('Please provide email and password', 400));
   }
+
+  email = email.toLowerCase();
 
   // Check for user
   const student = await Student.findOne({ email }).select('+password');
@@ -165,12 +167,14 @@ export const loginStudent = asyncHandler(async (req, res, next) => {
 // @route   POST /api/auth/admin/login
 // @access  Public
 export const loginAdmin = asyncHandler(async (req, res, next) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
 
   // Validate email & password
   if (!email || !password) {
     return next(new ErrorResponse('Please provide email and password', 400));
   }
+
+  email = email.toLowerCase();
 
   // Check for admin
   const admin = await Admin.findOne({ email }).select('+password');

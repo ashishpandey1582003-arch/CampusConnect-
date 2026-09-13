@@ -24,9 +24,6 @@ import bookmarkRoutes from './routes/bookmarkRoutes.js';
 // Initialize env variables
 dotenv.config({ override: true });
 
-// Connect to Database
-connectDB();
-
 const app = express();
 
 // Security Headers
@@ -113,43 +110,29 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-// Start server with automatic port fallback if the desired port is in use
-const startServer = (startPort, maxAttempts = 5) => {
-  let attemptsLeft = maxAttempts;
+let server;
 
-  const tryListen = (portToTry) => {
-    const srv = app.listen(portToTry, () => {
-      console.log(`Server running in ${process.env.NODE_ENV} mode on port ${portToTry}`);
+// Start accepting requests only after the database is ready.
+const startServer = async () => {
+  try {
+    await connectDB();
+    server = app.listen(PORT, () => {
+      console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
     });
-
-    srv.on('error', (err) => {
-      if (err && err.code === 'EADDRINUSE') {
-        console.error(`Port ${portToTry} is already in use.`);
-        attemptsLeft -= 1;
-        if (attemptsLeft > 0) {
-          const nextPort = portToTry + 1;
-          console.log(`Attempting to start on port ${nextPort} (${attemptsLeft} attempts left)...`);
-          // Give a small delay before retrying
-          setTimeout(() => tryListen(nextPort), 200);
-        } else {
-          console.error(`No available ports found after ${maxAttempts} attempts. Exiting.`);
-          process.exit(1);
-        }
-      } else {
-        console.error('Server error:', err);
-        process.exit(1);
-      }
-    });
-  };
-
-  tryListen(startPort);
+  } catch (err) {
+    console.error('Server startup aborted because MongoDB is unavailable.');
+    process.exit(1);
+  }
 };
 
-startServer(Number(PORT), 10);
+startServer();
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
   console.error(`Unhandled Rejection Error: ${err.message}`);
-  // Close server & exit process
-  server.close(() => process.exit(1));
+  if (server) {
+    server.close(() => process.exit(1));
+  } else {
+    process.exit(1);
+  }
 });

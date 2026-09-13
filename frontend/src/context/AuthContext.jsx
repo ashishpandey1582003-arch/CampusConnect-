@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
+      email = email.toLowerCase();
       const endpoint = role === 'admin' ? '/api/auth/admin/login' : '/api/auth/student/login';
       const response = await api.post(endpoint, { email, password });
       if (response.data.success) {

@@ -38,11 +38,11 @@ lerna-debug.log*
 *.sw?
 
 # Uploads and temporary files
-# backend/uploads/resumes/*
-# backend/uploads/photos/*
-# backend/uploads/logos/*
-# backend/uploads/brochures/*
-# backend/uploads/notifications/*
+backend/uploads/resumes/*
+backend/uploads/photos/*
+backend/uploads/logos/*
+backend/uploads/brochures/*
+backend/uploads/notifications/*
 !**/empty
 !**/.gitkeep
 test_photo.png
