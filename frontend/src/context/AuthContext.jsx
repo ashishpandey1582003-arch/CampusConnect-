@@ -42,7 +42,13 @@ export const AuthProvider = ({ children }) => {
         return { success: true };
       }
     } catch (err) {
-      const errMsg = err.response?.data?.error || 'Login failed. Please try again.';
+      console.error('Login error:', err);
+      const errMsg =
+        err.response?.data?.error ||
+        (err.message === 'Network Error'
+          ? 'Server is starting up. Please wait 15-20 seconds and try again.'
+          : err.message) ||
+        'Login failed. Please try again.';
       setError(errMsg);
       return { success: false, error: errMsg };
     } finally {

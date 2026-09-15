@@ -9,17 +9,17 @@ const sendTokenResponse = (user, statusCode, res) => {
     { expiresIn: process.env.JWT_EXPIRE }
   );
 
+  // In production or on Render, allow cross-site cookies between Vercel and Render
+  const isProduction = process.env.NODE_ENV === 'production' || !!process.env.RENDER;
+
   const options = {
     expires: new Date(
       Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    sameSite: isProduction ? 'none' : 'lax',
+    secure: isProduction,
   };
-
-  if (process.env.NODE_ENV === 'production') {
-    options.secure = true;
-  }
 
   // Format user profile response (excluding password)
   const userProfile = {

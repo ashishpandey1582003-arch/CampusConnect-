@@ -23,6 +23,9 @@ import bookmarkRoutes from './routes/bookmarkRoutes.js';
 
 const app = express();
 
+// Trust reverse proxy (Crucial for Render / Vercel to handle HTTPS and real client IP)
+app.set('trust proxy', 1);
+
 // Security Headers
 app.use(
   helmet({
@@ -46,15 +49,16 @@ const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
     
-    // Check if origin is localhost or local network IP (192.168.x.x, 10.x.x.x, 172.16-31.x.x)
+    // Check if origin is localhost, local network IP, or any Vercel domain
     const isLocal = 
       origin.startsWith('http://localhost') || 
       origin.startsWith('http://127.0.0.1') ||
       /^http:\/\/(192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+)(:\d+)?$/.test(origin);
       
+    const isVercel = origin.endsWith('.vercel.app');
     const isWhitelisted = frontendOrigins.includes(origin);
 
-    if (isLocal || isWhitelisted) {
+    if (isLocal || isVercel || isWhitelisted) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
