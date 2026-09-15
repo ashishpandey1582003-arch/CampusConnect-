@@ -1,9 +1,12 @@
 import axios from 'axios';
 import { BACKEND_URL } from '../utils/apiUrls';
 
+// Ensure clean base URL without trailing /api or /
+const cleanBaseUrl = BACKEND_URL ? BACKEND_URL.replace(/\/api\/?$/, '').replace(/\/$/, '') : '';
+
 // Create central API requester instance
 const api = axios.create({
-  baseURL: BACKEND_URL,
+  baseURL: cleanBaseUrl,
   withCredentials: true, // Crucial to send/receive JWT HTTPOnly Cookies
 });
 

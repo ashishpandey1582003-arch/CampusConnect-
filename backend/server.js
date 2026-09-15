@@ -92,6 +92,14 @@ const __dirname = path.dirname(__filename);
 // Serve Static Uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Middleware to normalize duplicate /api/api paths from misconfigured clients
+app.use((req, res, next) => {
+  if (req.url.startsWith('/api/api/')) {
+    req.url = req.url.replace('/api/api/', '/api/');
+  }
+  next();
+});
+
 // Map Router Endpoints
 app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);

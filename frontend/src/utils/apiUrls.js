@@ -1,12 +1,12 @@
 const getBackendUrl = () => {
   const envUrl = import.meta.env.VITE_API_URL;
   if (envUrl) {
-    return envUrl.replace(/\/api\/?$/, '');
+    return envUrl.replace(/\/api\/?$/, '').replace(/\/$/, '');
   }
   if (typeof window !== 'undefined' && window.location) {
     const hostname = window.location.hostname;
     if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1') {
-      return `http://${hostname}:5000`;
+      return 'https://campusconnect-0zdx.onrender.com';
     }
   }
   return 'http://localhost:5000';
