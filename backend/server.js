@@ -100,14 +100,19 @@ app.use((req, res, next) => {
   next();
 });
 
-// Map Router Endpoints
-app.use('/api/auth', authRoutes);
-app.use('/api/students', studentRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/recruiters', recruiterRoutes);
-app.use('/api/applications', applicationRoutes);
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/bookmarks', bookmarkRoutes);
+// Map Router Endpoints - Support both /api and /api/api prefixes
+const mountRoutes = (prefix) => {
+  app.use(`${prefix}/auth`, authRoutes);
+  app.use(`${prefix}/students`, studentRoutes);
+  app.use(`${prefix}/admin`, adminRoutes);
+  app.use(`${prefix}/recruiters`, recruiterRoutes);
+  app.use(`${prefix}/applications`, applicationRoutes);
+  app.use(`${prefix}/notifications`, notificationRoutes);
+  app.use(`${prefix}/bookmarks`, bookmarkRoutes);
+};
+
+mountRoutes('/api');
+mountRoutes('/api/api');
 
 // Base route health check
 app.get('/', (req, res) => {
