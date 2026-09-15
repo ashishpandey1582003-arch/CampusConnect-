@@ -1,6 +1,6 @@
 
+import 'dotenv/config';
 import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
@@ -20,9 +20,6 @@ import recruiterRoutes from './routes/recruiterRoutes.js';
 import applicationRoutes from './routes/applicationRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import bookmarkRoutes from './routes/bookmarkRoutes.js';
-
-// Initialize env variables
-dotenv.config({ override: true });
 
 const app = express();
 

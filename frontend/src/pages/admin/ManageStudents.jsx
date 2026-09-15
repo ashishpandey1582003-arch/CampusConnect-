@@ -44,18 +44,26 @@ const ManageStudents = () => {
   };
 
   const filteredStudents = students.filter((s) => {
+    const name = s.name || '';
+    const collegeRollNo = s.collegeRollNo || '';
+    const universityRollNo = s.universityRollNo || '';
+    const email = s.email || '';
+    const search = searchTerm.toLowerCase();
+
     const matchesSearch =
-      s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      s.collegeRollNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      s.email.toLowerCase().includes(searchTerm.toLowerCase());
+      name.toLowerCase().includes(search) ||
+      collegeRollNo.toLowerCase().includes(search) ||
+      universityRollNo.toLowerCase().includes(search) ||
+      email.toLowerCase().includes(search);
 
     const matchesBranch = branchFilter === 'All' || s.branch === branchFilter;
 
     let matchesCgpa = true;
-    if (cgpaFilter === '9+') matchesCgpa = s.cgpa >= 9.0;
-    else if (cgpaFilter === '8+') matchesCgpa = s.cgpa >= 8.0;
-    else if (cgpaFilter === '7+') matchesCgpa = s.cgpa >= 7.0;
-    else if (cgpaFilter === '6+') matchesCgpa = s.cgpa >= 6.0;
+    const cgpa = typeof s.cgpa === 'number' ? s.cgpa : parseFloat(s.cgpa) || 0;
+    if (cgpaFilter === '9+') matchesCgpa = cgpa >= 9.0;
+    else if (cgpaFilter === '8+') matchesCgpa = cgpa >= 8.0;
+    else if (cgpaFilter === '7+') matchesCgpa = cgpa >= 7.0;
+    else if (cgpaFilter === '6+') matchesCgpa = cgpa >= 6.0;
 
     return matchesSearch && matchesBranch && matchesCgpa;
   });

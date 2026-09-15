@@ -35,6 +35,9 @@ export const AuthProvider = ({ children }) => {
       const endpoint = role === 'admin' ? '/api/auth/admin/login' : '/api/auth/student/login';
       const response = await api.post(endpoint, { email, password });
       if (response.data.success) {
+        if (response.data.token) {
+          localStorage.setItem('token', response.data.token);
+        }
         setUser(response.data.user);
         return { success: true };
       }
@@ -58,6 +61,9 @@ export const AuthProvider = ({ children }) => {
         },
       });
       if (response.data.success) {
+        if (response.data.token) {
+          localStorage.setItem('token', response.data.token);
+        }
         setUser(response.data.user);
         return { success: true };
       }
@@ -77,6 +83,9 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await api.post('/api/auth/admin/register', adminData);
       if (response.data.success) {
+        if (response.data.token) {
+          localStorage.setItem('token', response.data.token);
+        }
         setUser(response.data.user);
         return { success: true };
       }
@@ -94,9 +103,12 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       await api.post('/api/auth/logout');
+      localStorage.removeItem('token');
       setUser(null);
     } catch (err) {
       console.error('Logout error:', err);
+      localStorage.removeItem('token');
+      setUser(null);
     } finally {
       setLoading(false);
     }

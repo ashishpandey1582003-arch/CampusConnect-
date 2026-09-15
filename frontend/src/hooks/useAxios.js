@@ -7,6 +7,15 @@ const api = axios.create({
   withCredentials: true, // Crucial to send/receive JWT HTTPOnly Cookies
 });
 
+// Request interceptor to attach Bearer token from localStorage as fallback
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // Response interceptor to handle session expirations globally
 api.interceptors.response.use(
   (response) => response,
