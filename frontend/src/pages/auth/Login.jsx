@@ -7,7 +7,7 @@ import * as z from 'zod';
 import { KeyRound, Mail, ShieldAlert, GraduationCap, Lock } from 'lucide-react';
 
 const loginSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address' }),
+  email: z.string().min(1, { message: 'Email or Roll number is required' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
 });
 
@@ -96,14 +96,24 @@ const Login = () => {
           {/* Form fields */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Email Address</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                {role === 'student' ? 'Email or University Roll No' : 'Email Address'}
+              </label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Mail className="h-4.5 w-4.5 text-slate-500" />
+                  {role === 'student' ? (
+                    <GraduationCap className="h-4.5 w-4.5 text-slate-500" />
+                  ) : (
+                    <Mail className="h-4.5 w-4.5 text-slate-500" />
+                  )}
                 </span>
                 <input
-                  type="email"
-                  placeholder="name@college.edu"
+                  type={role === 'student' ? 'text' : 'email'}
+                  placeholder={
+                    role === 'student'
+                      ? 'name@college.edu or Roll No (e.g. 1472583690)'
+                      : 'name@college.edu'
+                  }
                   {...register('email')}
                   className="w-full rounded-xl border border-slate-800 bg-slate-950/50 py-3 pl-10 pr-4 text-sm text-white placeholder-slate-600 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 transition-colors"
                 />

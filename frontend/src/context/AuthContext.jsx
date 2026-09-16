@@ -27,13 +27,17 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Login Student or Admin
-  const login = async (email, password, role) => {
+  const login = async (emailOrId, password, role) => {
     setLoading(true);
     setError(null);
     try {
-      email = email.toLowerCase();
+      const trimmedIdentifier = (emailOrId || '').trim();
       const endpoint = role === 'admin' ? '/api/auth/admin/login' : '/api/auth/student/login';
-      const response = await api.post(endpoint, { email, password });
+      const response = await api.post(endpoint, {
+        email: trimmedIdentifier,
+        identifier: trimmedIdentifier,
+        password,
+      });
       if (response.data.success) {
         if (response.data.token) {
           localStorage.setItem('token', response.data.token);

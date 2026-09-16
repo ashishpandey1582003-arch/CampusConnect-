@@ -133,21 +133,28 @@ export const registerAdmin = asyncHandler(async (req, res, next) => {
 });
 
 
-// @desc    Login student
+// @desc    Login student (Supports Email or University/College Roll Number)
 // @route   POST /api/auth/student/login
 // @access  Public
 export const loginStudent = asyncHandler(async (req, res, next) => {
-  let { email, password } = req.body;
+  let { email, identifier, rollNo, password } = req.body;
+  const loginId = (email || identifier || rollNo || '').trim();
 
-  // Validate email & password
-  if (!email || !password) {
-    return next(new ErrorResponse('Please provide email and password', 400));
+  // Validate credentials input
+  if (!loginId || !password) {
+    return next(new ErrorResponse('Please provide email or roll number and password', 400));
   }
 
-  email = email.toLowerCase();
+  const escapedId = loginId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-  // Check for user
-  const student = await Student.findOne({ email }).select('+password');
+  // Check for student by email (case-insensitive) OR universityRollNo OR collegeRollNo
+  const student = await Student.findOne({
+    $or: [
+      { email: loginId.toLowerCase() },
+      { universityRollNo: { $regex: new RegExp(`^${escapedId}$`, 'i') } },
+      { collegeRollNo: { $regex: new RegExp(`^${escapedId}$`, 'i') } },
+    ],
+  }).select('+password');
 
   if (!student) {
     return next(new ErrorResponse('Invalid credentials', 401));
@@ -174,7 +181,7 @@ export const loginAdmin = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse('Please provide email and password', 400));
   }
 
-  email = email.toLowerCase();
+  email = email.trim().toLowerCase();
 
   // Check for admin
   const admin = await Admin.findOne({ email }).select('+password');
