@@ -26,27 +26,26 @@ export const registerStudent = asyncHandler(async (req, res, next) => {
   } = req.body;
 
   // Check if student already exists
-  console.log('--- REGISTRATION DEBUG ---');
-  console.log('Incoming registration values:', { email, collegeRollNo, universityRollNo });
-  
+  const trimmedEmail = email ? email.trim().toLowerCase() : '';
+  const trimmedUniRoll = universityRollNo ? universityRollNo.trim() : '';
+
   // Build query array filtering out undefined or empty values to avoid accidental matching
   const orConditions = [];
-  if (email) orConditions.push({ email: email.toLowerCase() });
-  if (universityRollNo) orConditions.push({ universityRollNo });
+  if (trimmedEmail) orConditions.push({ email: trimmedEmail });
+  if (trimmedUniRoll) orConditions.push({ universityRollNo: trimmedUniRoll });
 
   let existingStudent = null;
   if (orConditions.length > 0) {
     existingStudent = await Student.findOne({ $or: orConditions });
   }
-  console.log('existingStudent match found:', existingStudent);
 
   if (existingStudent) {
     let matchField = '';
     let matchValue = '';
-    if (email && existingStudent.email === email.toLowerCase()) {
+    if (trimmedEmail && existingStudent.email === trimmedEmail) {
       matchField = 'Email';
       matchValue = existingStudent.email;
-    } else if (universityRollNo && existingStudent.universityRollNo === universityRollNo) {
+    } else if (trimmedUniRoll && existingStudent.universityRollNo === trimmedUniRoll) {
       matchField = 'University Roll Number';
       matchValue = existingStudent.universityRollNo;
     }
@@ -86,10 +85,10 @@ export const registerStudent = asyncHandler(async (req, res, next) => {
 
   // Create Student
   const student = await Student.create({
-    name,
-    collegeRollNo,
-    universityRollNo,
-    email,
+    name: name?.trim(),
+    collegeRollNo: collegeRollNo?.trim(),
+    universityRollNo: trimmedUniRoll,
+    email: trimmedEmail,
     password,
     branch,
     year,

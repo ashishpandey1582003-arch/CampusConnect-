@@ -128,7 +128,8 @@ const ApplicationsManager = () => {
               <thead className="bg-slate-50 dark:bg-slate-850 text-slate-400 font-bold">
                 <tr>
                   <th className="px-6 py-4">Student Name</th>
-                  <th className="px-6 py-4">University Name</th>
+                  <th className="px-6 py-4">Roll No</th>
+                  <th className="px-6 py-4">University</th>
                   <th className="px-6 py-4">Branch</th>
                   <th className="px-6 py-4">CGPA</th>
                   <th className="px-6 py-4">Resume</th>
@@ -142,7 +143,10 @@ const ApplicationsManager = () => {
                     <td className="px-6 py-4 font-bold text-slate-800 dark:text-white">
                       {app.student?.name}
                     </td>
-                    <td className="px-6 py-4 font-semibold">{app.student?.collegeRollNo}</td>
+                    <td className="px-6 py-4 font-mono font-semibold text-slate-800 dark:text-slate-200">
+                      {app.student?.universityRollNo || '-'}
+                    </td>
+                    <td className="px-6 py-4 font-semibold text-slate-600 dark:text-slate-350">{app.student?.collegeRollNo || '-'}</td>
                     <td className="px-6 py-4 font-bold">{app.student?.branch}</td>
                     <td className="px-6 py-4">{app.student?.cgpa}</td>
                     <td className="px-6 py-4">

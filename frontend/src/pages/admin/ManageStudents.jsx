@@ -165,7 +165,8 @@ const ManageStudents = () => {
               <thead className="bg-slate-50 dark:bg-slate-850 text-slate-400 font-bold">
                 <tr>
                   <th className="px-6 py-4">Student Name</th>
-                  <th className="px-6 py-4">University Name</th>
+                  <th className="px-6 py-4">Roll No</th>
+                  <th className="px-6 py-4">University</th>
                   <th className="px-6 py-4">Email</th>
                   <th className="px-6 py-4">Branch</th>
                   <th className="px-6 py-4">CGPA</th>
@@ -182,7 +183,10 @@ const ManageStudents = () => {
                       </div>
                       <span>{s.name}</span>
                     </td>
-                    <td className="px-6 py-4 font-semibold">{s.collegeRollNo}</td>
+                    <td className="px-6 py-4 font-mono font-semibold text-slate-800 dark:text-slate-200">
+                      {s.universityRollNo || '-'}
+                    </td>
+                    <td className="px-6 py-4 font-semibold text-slate-600 dark:text-slate-350">{s.collegeRollNo || '-'}</td>
                     <td className="px-6 py-4">{s.email}</td>
                     <td className="px-6 py-4 font-bold">{s.branch}</td>
                     <td className="px-6 py-4 font-semibold text-slate-700 dark:text-slate-300">

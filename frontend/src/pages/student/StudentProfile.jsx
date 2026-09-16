@@ -124,8 +124,11 @@ const StudentProfile = () => {
             </div>
           </div>
           <h3 className="text-base font-bold text-slate-800 dark:text-white">{user?.name}</h3>
-          <p className="text-xs text-slate-400 dark:text-slate-500">
-            {user?.collegeRollNo} | {user?.branch} Branch
+          <p className="text-xs font-semibold text-sky-600 dark:text-sky-400">
+            Roll No: {user?.universityRollNo || 'N/A'}
+          </p>
+          <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+            {user?.collegeRollNo} • {user?.branch} Branch
           </p>
 
           <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-6 text-left text-xs text-slate-600 dark:border-slate-800 dark:text-slate-350">

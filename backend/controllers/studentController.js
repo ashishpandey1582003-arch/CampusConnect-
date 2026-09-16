@@ -241,8 +241,8 @@ export const exportStudentsPDF = asyncHandler(async (req, res, next) => {
 
   // Table Columns Setup
   const tableTop = 100;
-  const colWidths = [120, 100, 70, 40, 40, 160];
-  const colHeaders = ['Name', 'College Roll', 'Branch', 'Year', 'CGPA', 'Email'];
+  const colWidths = [105, 80, 75, 45, 30, 35, 165];
+  const colHeaders = ['Name', 'Roll No', 'University', 'Branch', 'Year', 'CGPA', 'Email'];
 
   // Table header background
   doc.fillColor('#1e3a8a').rect(30, tableTop - 5, 535, 20).fill();
@@ -277,7 +277,15 @@ export const exportStudentsPDF = asyncHandler(async (req, res, next) => {
     }
 
     currentX = 35;
-    const rowValues = [s.name, s.collegeRollNo, s.branch, s.year.toString(), s.cgpa.toString(), s.email];
+    const rowValues = [
+      s.name,
+      s.universityRollNo || '-',
+      s.collegeRollNo || '-',
+      s.branch,
+      s.year.toString(),
+      s.cgpa.toString(),
+      s.email,
+    ];
     rowValues.forEach((val, index) => {
       // Crop string if too long
       const text = val.length > 25 ? val.substring(0, 22) + '...' : val;
