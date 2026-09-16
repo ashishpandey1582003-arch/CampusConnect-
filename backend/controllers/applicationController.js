@@ -39,10 +39,7 @@ export const applyDrive = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse('Student profile not found', 404));
   }
 
-  // Make sure resume is uploaded
-  if (!student.resume) {
-    return next(new ErrorResponse('Please upload a resume in your profile before applying', 400));
-  }
+  // Resume is optional - snapshot is saved if present
 
   // Check Automatic Eligibility: Branch, CGPA, Passing Year
   const isBranchAllowed = recruiter.allowedBranches.includes(student.branch);
@@ -75,7 +72,7 @@ export const applyDrive = asyncHandler(async (req, res, next) => {
   const application = await Application.create({
     student: studentId,
     recruiter: recruiterId,
-    resume: student.resume, // Save a copy of the current resume path
+    resume: student.resume || '', // Save a copy of the current resume path if available
     status: 'Applied',
     timeline: [
       {

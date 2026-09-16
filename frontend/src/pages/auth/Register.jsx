@@ -59,15 +59,6 @@ const Register = () => {
   } = adminForm;
 
   const onStudentSubmit = async (data) => {
-    if (!resumeFile) {
-      setSubmitError('Please upload your resume PDF');
-      return;
-    }
-    if (!photoFile) {
-      setSubmitError('Please upload your profile photo');
-      return;
-    }
-
     setLoading(true);
     setSubmitError(null);
 
@@ -75,8 +66,12 @@ const Register = () => {
     Object.keys(data).forEach((key) => {
       if (data[key] !== undefined) formData.append(key, data[key]);
     });
-    formData.append('resume', resumeFile);
-    formData.append('photo', photoFile);
+    if (resumeFile) {
+      formData.append('resume', resumeFile);
+    }
+    if (photoFile) {
+      formData.append('photo', photoFile);
+    }
 
     const result = await registerStudent(formData);
     setLoading(false);
@@ -350,7 +345,7 @@ const Register = () => {
                   <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 p-6 text-center hover:border-sky-500 transition-colors">
                     <FileUp className="mx-auto mb-2 h-8 w-8 text-sky-500" />
                     <p className="text-xs font-bold text-slate-900">
-                      Resume Document <span className="text-red-600 font-extrabold">*</span>
+                      Resume Document <span className="text-slate-400 font-normal text-[11px]">(Optional)</span>
                     </p>
                     <p className="text-[10px] text-slate-500 mb-4">Accepts PDF file (Max 10MB)</p>
                     <input
@@ -372,7 +367,7 @@ const Register = () => {
                   <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 p-6 text-center hover:border-sky-500 transition-colors">
                     <FileUp className="mx-auto mb-2 h-8 w-8 text-sky-500" />
                     <p className="text-xs font-bold text-slate-900">
-                      Profile Picture <span className="text-red-600 font-extrabold">*</span>
+                      Profile Picture <span className="text-slate-400 font-normal text-[11px]">(Optional)</span>
                     </p>
                     <p className="text-[10px] text-slate-500 mb-4">Accepts JPEG, JPG, PNG (Max 10MB)</p>
                     <input
