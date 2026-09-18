@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../hooks/useAxios';
 import { BACKEND_URL, getFullUrl } from '../../utils/apiUrls';
+import { isBranchEligible } from '../../utils/branchHelper';
 import {
   Building2,
   Calendar,
@@ -113,7 +114,7 @@ const RecruiterDetails = () => {
   }
 
   // Double check eligibility
-  const isBranchAllowed = drive.allowedBranches.includes(user?.branch);
+  const isBranchAllowed = isBranchEligible(drive.allowedBranches, user?.branch);
   const isCgpaAllowed = user?.cgpa >= drive.minCGPA;
   const isEligible = isBranchAllowed && isCgpaAllowed;
 

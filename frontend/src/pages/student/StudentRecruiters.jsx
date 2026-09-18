@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../hooks/useAxios';
 import { BACKEND_URL, getFullUrl } from '../../utils/apiUrls';
+import { isBranchEligible } from '../../utils/branchHelper';
 import { Search, Briefcase, Bookmark, Award, DollarSign, Calendar, SlidersHorizontal } from 'lucide-react';
 
 const StudentRecruiters = () => {
@@ -72,14 +73,14 @@ const StudentRecruiters = () => {
 
       // 2. Branch check
       const matchesBranch =
-        branchFilter === 'All' || drive.allowedBranches.includes(branchFilter);
+        branchFilter === 'All' || isBranchEligible(drive.allowedBranches, branchFilter);
 
       // 3. Status check
       const matchesStatus = statusFilter === 'All' || drive.status === statusFilter;
 
       // 4. Dynamic Eligibility check
       const isEligible =
-        user && user.cgpa >= drive.minCGPA && drive.allowedBranches.includes(user.branch);
+        user && user.cgpa >= drive.minCGPA && isBranchEligible(drive.allowedBranches, user.branch);
       const matchesEligibility = eligibilityFilter === 'All' || (eligibilityFilter === 'Eligible' && isEligible);
 
       return matchesSearch && matchesBranch && matchesStatus && matchesEligibility;
@@ -168,7 +169,7 @@ const StudentRecruiters = () => {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredDrives.map((drive) => {
             const isEligible =
-              user && user.cgpa >= drive.minCGPA && drive.allowedBranches.includes(user.branch);
+              user && user.cgpa >= drive.minCGPA && isBranchEligible(drive.allowedBranches, user.branch);
             const isBookmarked = bookmarks.includes(drive._id);
 
             return (

@@ -42,7 +42,10 @@ export const applyDrive = asyncHandler(async (req, res, next) => {
   // Resume is optional - snapshot is saved if present
 
   // Check Automatic Eligibility: Branch, CGPA, Passing Year
-  const isBranchAllowed = recruiter.allowedBranches.includes(student.branch);
+  const normalizeBranch = (b) => (b || '').toLowerCase().replace(/[\s\(\)\/_\-]/g, '');
+  const isBranchAllowed = (recruiter.allowedBranches || []).some(
+    (b) => normalizeBranch(b) === normalizeBranch(student.branch)
+  );
   const isCgpaAllowed = student.cgpa >= recruiter.minCGPA;
   
   // Calculate student passing year based on current academic year status

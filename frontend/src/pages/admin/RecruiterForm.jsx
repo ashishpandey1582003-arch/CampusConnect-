@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import api from '../../hooks/useAxios';
-import { ArrowLeft, Save, ShieldAlert, FileUp } from 'lucide-react';
+import { ArrowLeft, Save, ShieldAlert, FileUp, Check } from 'lucide-react';
+import { AVAILABLE_BRANCHES } from '../../utils/branchHelper';
 
 const RecruiterForm = () => {
   const { id } = useParams(); // Exists if we are editing
@@ -11,6 +12,7 @@ const RecruiterForm = () => {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [selectedBranches, setSelectedBranches] = useState(['CSE', 'IT', 'ECE']);
 
   // Core Form State
   const [formData, setFormData] = useState({
@@ -100,6 +102,17 @@ const RecruiterForm = () => {
             hrQuestions: prep.hrQuestions ? prep.hrQuestions.join(', ') : '',
             resources: prep.resources ? prep.resources.join(', ') : '',
           });
+
+          if (d.allowedBranches && Array.isArray(d.allowedBranches)) {
+            setSelectedBranches(d.allowedBranches);
+          } else if (typeof d.allowedBranches === 'string') {
+            setSelectedBranches(
+              d.allowedBranches
+                .split(',')
+                .map((b) => b.trim())
+                .filter(Boolean)
+            );
+          }
         }
       } catch (err) {
         console.error(err);
@@ -127,6 +140,13 @@ const RecruiterForm = () => {
     Object.keys(formData).forEach((key) => {
       dataToSend.append(key, formData[key]);
     });
+
+    if (selectedBranches.length === 0) {
+      setErrorMsg('Please select at least one allowed branch for this recruitment drive.');
+      setLoading(false);
+      return;
+    }
+    dataToSend.set('allowedBranches', selectedBranches.join(', '));
 
     if (logoFile) dataToSend.append('logo', logoFile);
     if (brochureFile) dataToSend.append('brochure', brochureFile);
@@ -308,17 +328,70 @@ const RecruiterForm = () => {
                   className="w-full rounded-xl border border-slate-200 bg-transparent px-4 py-2.5 text-xs text-slate-805 dark:text-white dark:border-slate-850 focus:outline-none"
                 />
               </div>
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-medium text-slate-500 mb-1.5">Allowed Branches (Comma Separated)</label>
-                <input
-                  type="text"
-                  required
-                  name="allowedBranches"
-                  value={formData.allowedBranches}
-                  onChange={handleChange}
-                  placeholder="CSE, IT, ECE"
-                  className="w-full rounded-xl border border-slate-200 bg-transparent px-4 py-2.5 text-xs text-slate-805 dark:text-white dark:border-slate-850 focus:outline-none"
-                />
+              <div className="sm:col-span-2 space-y-2.5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <label className="block text-xs font-medium text-slate-500">
+                    Allowed Branches <span className="font-semibold text-brand-600 dark:text-brand-400">({selectedBranches.length} selected)</span>
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedBranches([...AVAILABLE_BRANCHES])}
+                      className="text-[11px] font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400 hover:underline"
+                    >
+                      Select All
+                    </button>
+                    <span className="text-slate-300 dark:text-slate-700">•</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedBranches([])}
+                      className="text-[11px] font-semibold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:underline"
+                    >
+                      Clear All
+                    </button>
+                  </div>
+                </div>
+
+                {/* Branch Selection Chips */}
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {AVAILABLE_BRANCHES.map((branch) => {
+                    const isSelected = selectedBranches.includes(branch);
+                    return (
+                      <button
+                        key={branch}
+                        type="button"
+                        onClick={() => {
+                          if (isSelected) {
+                            setSelectedBranches(selectedBranches.filter((b) => b !== branch));
+                          } else {
+                            setSelectedBranches([...selectedBranches, branch]);
+                          }
+                        }}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
+                          isSelected
+                            ? 'bg-brand-500 text-white border-brand-500 shadow-sm shadow-brand-500/20'
+                            : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 dark:hover:border-slate-600'
+                        }`}
+                      >
+                        <span
+                          className={`w-3.5 h-3.5 rounded flex items-center justify-center text-[10px] border ${
+                            isSelected
+                              ? 'bg-white text-brand-600 border-white font-bold'
+                              : 'border-slate-300 dark:border-slate-600 bg-transparent'
+                          }`}
+                        >
+                          {isSelected && '✓'}
+                        </span>
+                        {branch}
+                      </button>
+                    );
+                  })}
+                </div>
+                {selectedBranches.length === 0 && (
+                  <p className="text-[11px] font-medium text-red-500">
+                    * Please select at least one branch for this recruitment drive.
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-xs font-medium text-slate-500 mb-1.5">Skills Required (Comma Separated)</label>

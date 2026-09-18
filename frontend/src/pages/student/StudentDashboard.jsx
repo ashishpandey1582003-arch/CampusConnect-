@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../hooks/useAxios';
+import { isBranchEligible } from '../../utils/branchHelper';
 import {
   Briefcase,
   Bell,
@@ -50,7 +51,7 @@ const StudentDashboard = () => {
 
   // Check general eligibility count
   const eligibleDrives = drives.filter(
-    (drive) => user && user.cgpa >= drive.minCGPA && drive.allowedBranches.includes(user.branch)
+    (drive) => user && user.cgpa >= drive.minCGPA && isBranchEligible(drive.allowedBranches, user.branch)
   );
 
   const getStatusBadge = (status) => {
@@ -235,7 +236,7 @@ const StudentDashboard = () => {
               <div className="space-y-4">
                 {drives.slice(0, 3).map((drive) => {
                   const isEligible =
-                    user && user.cgpa >= drive.minCGPA && drive.allowedBranches.includes(user.branch);
+                    user && user.cgpa >= drive.minCGPA && isBranchEligible(drive.allowedBranches, user.branch);
 
                   return (
                     <div

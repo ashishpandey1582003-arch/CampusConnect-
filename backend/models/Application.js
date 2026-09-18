@@ -14,7 +14,7 @@ const applicationSchema = new mongoose.Schema(
     },
     resume: {
       type: String, // Snapshot path of the resume at the time of application
-      required: true,
+      default: '',
     },
     status: {
       type: String,
