@@ -184,7 +184,7 @@ const Register = () => {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. Ashish Kumar Pandey"
+                      placeholder="e.g. Enter your name"
                       {...register('name')}
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
                     />
@@ -196,7 +196,7 @@ const Register = () => {
                     </label>
                     <input
                       type="email"
-                      placeholder="e.g. ashishpandey@gmail.com"
+                      placeholder="e.g. Enter your gmail"
                       {...register('email')}
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
                     />
@@ -208,7 +208,7 @@ const Register = () => {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. 9876543210 (10 digits)"
+                      placeholder="e.g. 0nly 10 digits"
                       {...register('mobileNo')}
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
                     />
@@ -255,7 +255,7 @@ const Register = () => {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. 2303611530065 (Unique)"
+                      placeholder="e.g. (Unique)"
                       {...register('universityRollNo')}
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
                     />
