@@ -75,6 +75,27 @@ export const getStudents = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @desc    Get single student profile (Student themselves / Admin)
+// @route   GET /api/students/:id
+// @access  Private
+export const getStudentById = asyncHandler(async (req, res, next) => {
+  const student = await Student.findById(req.params.id);
+
+  if (!student) {
+    return next(new ErrorResponse(`Student not found with id of ${req.params.id}`, 404));
+  }
+
+  // Authorize: Students can only view their own profile. Admins can view any student.
+  if (req.user.role !== 'admin' && req.user._id.toString() !== student._id.toString()) {
+    return next(new ErrorResponse('Not authorized to access this profile', 403));
+  }
+
+  res.status(200).json({
+    success: true,
+    data: student,
+  });
+});
+
 // @desc    Update student profile details (Student / Admin)
 // @route   PUT /api/students/:id
 // @access  Private
@@ -88,6 +109,44 @@ export const updateStudent = asyncHandler(async (req, res, next) => {
   // Authorize: Students can only update themselves. Admins can update anyone.
   if (req.user.role !== 'admin' && req.user._id.toString() !== student._id.toString()) {
     return next(new ErrorResponse('Not authorized to update this profile', 403));
+  }
+
+  // Email duplicate check if changed
+  if (req.body.email) {
+    const trimmedEmail = req.body.email.trim().toLowerCase();
+    if (trimmedEmail !== student.email) {
+      const emailExists = await Student.findOne({ email: trimmedEmail, _id: { $ne: student._id } });
+      if (emailExists) {
+        return next(
+          new ErrorResponse(`Email '${trimmedEmail}' is already registered with another student account`, 400)
+        );
+      }
+      req.body.email = trimmedEmail;
+    }
+  }
+
+  // University Roll No duplicate check if changed
+  if (req.body.universityRollNo) {
+    const trimmedUniRoll = req.body.universityRollNo.trim();
+    if (trimmedUniRoll !== student.universityRollNo) {
+      const rollExists = await Student.findOne({ universityRollNo: trimmedUniRoll, _id: { $ne: student._id } });
+      if (rollExists) {
+        return next(
+          new ErrorResponse(`University Roll Number '${trimmedUniRoll}' is already registered with another account`, 400)
+        );
+      }
+      req.body.universityRollNo = trimmedUniRoll;
+    }
+  }
+
+  // College / University Name trim
+  if (req.body.collegeRollNo) {
+    req.body.collegeRollNo = req.body.collegeRollNo.trim();
+  }
+
+  // Section trim
+  if (req.body.section) {
+    req.body.section = req.body.section.trim();
   }
 
   // Handle file uploads (only override if new files are passed)
@@ -106,17 +165,29 @@ export const updateStudent = asyncHandler(async (req, res, next) => {
   }
 
   // Parse skills
-  let skills = req.body.skills || student.skills;
-  if (req.body.skills) {
-    try {
-      skills = typeof req.body.skills === 'string' ? JSON.parse(req.body.skills) : req.body.skills;
-    } catch (e) {
-      skills = req.body.skills.split(',').map((s) => s.trim());
+  let skills = req.body.skills !== undefined ? req.body.skills : student.skills;
+  if (req.body.skills !== undefined) {
+    if (Array.isArray(req.body.skills)) {
+      skills = req.body.skills;
+    } else {
+      try {
+        skills = typeof req.body.skills === 'string' ? JSON.parse(req.body.skills) : req.body.skills;
+      } catch (e) {
+        skills = req.body.skills.split(',').map((s) => s.trim()).filter(Boolean);
+      }
     }
   }
 
-  // Protect fields from students (e.g. CGPA, Roll No updates can be blocked or allowed. Let's allow but require admin log if CGPA changes)
-  const isCgpaChanged = req.body.cgpa && parseFloat(req.body.cgpa) !== student.cgpa;
+  // Year validation / conversion
+  if (req.body.year !== undefined && req.body.year !== '') {
+    req.body.year = Number(req.body.year);
+  }
+
+  // CGPA validation / conversion
+  const isCgpaChanged = req.body.cgpa !== undefined && parseFloat(req.body.cgpa) !== student.cgpa;
+  if (req.body.cgpa !== undefined && req.body.cgpa !== '') {
+    req.body.cgpa = parseFloat(req.body.cgpa);
+  }
 
   const updateFields = {
     ...req.body,
@@ -125,11 +196,31 @@ export const updateStudent = asyncHandler(async (req, res, next) => {
     skills,
   };
 
-  // Manually hash password if updated (since findByIdAndUpdate bypasses pre-save hook)
-  if (req.body.password) {
+  // Prevent privilege escalation by non-admin users
+  if (req.user.role !== 'admin') {
+    delete updateFields.role;
+    delete updateFields.isVerified;
+  }
+
+  // Handle password update if supplied
+  if (req.body.password && req.body.password.trim() !== '') {
+    if (req.body.password.length < 6) {
+      return next(new ErrorResponse('Password must be at least 6 characters long', 400));
+    }
+    // If oldPassword provided, check it
+    if (req.body.oldPassword) {
+      const studentWithPass = await Student.findById(req.params.id).select('+password');
+      const isMatch = await studentWithPass.matchPassword(req.body.oldPassword);
+      if (!isMatch) {
+        return next(new ErrorResponse('Current password does not match. Please enter correct password.', 400));
+      }
+    }
     const salt = await bcrypt.genSalt(10);
     updateFields.password = await bcrypt.hash(req.body.password, salt);
+  } else {
+    delete updateFields.password;
   }
+  delete updateFields.oldPassword;
 
   // If Admin changes sensitive fields, log it
   if (req.user.role === 'admin') {

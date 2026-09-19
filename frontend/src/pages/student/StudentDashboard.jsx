@@ -13,6 +13,7 @@ import {
   Clock,
   ChevronRight,
   TrendingUp,
+  UserCheck,
 } from 'lucide-react';
 
 const StudentDashboard = () => {
@@ -97,10 +98,17 @@ const StudentDashboard = () => {
               Manage drive schedules, prepare with placement papers, and track application states.
             </p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              to="/student/profile"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-white/20 px-4 py-2.5 text-xs font-bold text-white hover:bg-white/30 backdrop-blur-sm border border-white/30 transition-all shadow-sm"
+            >
+              <UserCheck className="h-4 w-4" />
+              Edit / Correct Profile
+            </Link>
             <Link
               to="/student/recruiters"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-brand-700 hover:bg-slate-50 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-brand-700 hover:bg-slate-50 transition-colors shadow-md"
             >
               Browse Drives
               <ChevronRight className="h-4 w-4" />

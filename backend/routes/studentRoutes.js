@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   getStudents,
+  getStudentById,
   updateStudent,
   deleteStudent,
   exportStudentsExcel,
@@ -20,6 +21,9 @@ router.get('/export/pdf', authorize('admin'), exportStudentsPDF);
 
 // Admin-only actions: get all students
 router.get('/', authorize('admin'), getStudents);
+
+// Get single student profile (Student themselves OR Admin)
+router.get('/:id', getStudentById);
 
 // Dynamic profile update (Student themselves OR Admin)
 router.put(
