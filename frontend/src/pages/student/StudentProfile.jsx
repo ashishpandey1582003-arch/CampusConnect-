@@ -79,7 +79,7 @@ const StudentProfile = () => {
   const [passErrorMsg, setPassErrorMsg] = useState(null);
 
   // Active section tab
-  const [activeTab, setActiveTab] = useState('all'); // 'all', 'personal', 'academics', 'documents', 'security'
+  const [activeTab, setActiveTab] = useState('all');
 
   // Load user data into form on mount or user state change
   useEffect(() => {
@@ -283,7 +283,7 @@ const StudentProfile = () => {
                     }}
                   />
                 ) : (
-                  user?.name?.charAt(0)?.toUpperCase() || 'S'
+                  (user?.name ? user.name.charAt(0).toUpperCase() : 'S')
                 )}
               </div>
 
@@ -861,4 +861,4 @@ const StudentProfile = () => {
   );
 };
 
-export default StudentProfile;e;
+export default StudentProfile;

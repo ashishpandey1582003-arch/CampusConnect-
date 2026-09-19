@@ -22,12 +22,12 @@ const Navbar = ({ toggleSidebar }) => {
 
         <div className="hidden lg:block">
           <h2 className="text-xl font-bold text-slate-800 dark:text-white">
-            Welcome back, {user?.name.split(' ')[0]}!
+            Welcome back, {(user?.name || 'User').split(' ')[0]}!
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
             {user?.role === 'admin'
               ? 'Administrator Control Panel'
-              : `B.Tech ${user?.branch} - Section ${user?.section} (${user?.year} Year)`}
+              : `B.Tech ${user?.branch || ''} - Section ${user?.section || ''} (${user?.year ? `${user.year} Year` : ''})`}
           </p>
         </div>
       </div>
@@ -58,11 +58,11 @@ const Navbar = ({ toggleSidebar }) => {
           className="flex items-center gap-2 rounded-xl border border-slate-200 p-1.5 pr-3 hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50"
         >
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-100 font-semibold text-brand-700 dark:bg-brand-950 dark:text-brand-300">
-            {user?.name.charAt(0)}
+            {(user?.name || 'U').charAt(0).toUpperCase()}
           </div>
           <div className="hidden text-left sm:block">
             <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">
-              {user?.name}
+              {user?.name || 'User'}
             </p>
             <p className="text-[10px] text-slate-400 dark:text-slate-500 capitalize">
               {user?.role}
