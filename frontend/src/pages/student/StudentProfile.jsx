@@ -243,18 +243,20 @@ const StudentProfile = () => {
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-xs font-semibold backdrop-blur-md mb-3">
               <Sparkles className="h-3.5 w-3.5" />
-              Student Self-Service Portal
+              Verified Candidate Portfolio
             </div>
-            <h2 className="text-2xl font-bold md:text-3xl">Profile & Data Correction</h2>
-            <p className="mt-1 text-xs sm:text-sm text-sky-100 max-w-2xl">
-              Aap login karne ke baad bhi apna personal data, university roll number, college name, branch,
-              year, CGPA, resume, aur profile photo kabhi bhi update ya correct kar sakte hain.
+            <h2 className="text-2xl font-bold md:text-3xl tracking-tight">Student Profile & Academic Record</h2>
+            <p className="mt-1 text-xs sm:text-sm text-sky-100 max-w-2xl font-normal leading-relaxed">
+              Keep your official academic qualifications, university registration details, technical skillset, and recruitment documents synchronized in real-time across all campus placement drives.
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-xl bg-white/10 px-3.5 py-2 text-xs font-semibold backdrop-blur-md border border-white/20">
-              <CheckCircle2 className="h-4 w-4 text-emerald-300" />
-              Direct Sync Enabled
+            <span className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-3.5 py-2 text-xs font-bold backdrop-blur-md border border-white/20 shadow-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+              </span>
+              Live Sync Active
             </span>
           </div>
         </div>
@@ -416,7 +418,7 @@ const StudentProfile = () => {
                     <User className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-850 dark:text-white">Personal Information</h3>
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white">Personal Information</h3>
                     <p className="text-xs text-slate-400">Update your official contact details and full name</p>
                   </div>
                 </div>
@@ -432,7 +434,7 @@ const StudentProfile = () => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Ashish Pandey"
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-850 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
                     />
                   </div>
 
@@ -446,7 +448,7 @@ const StudentProfile = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="e.g. student@college.edu"
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-850 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
                     />
                     <p className="mt-1 text-[11px] text-slate-400">Used for recruiter and drive notifications</p>
                   </div>
