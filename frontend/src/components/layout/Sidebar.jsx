@@ -73,16 +73,16 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </div>
 
         {/* User Card */}
-        <div className="mb-6 rounded-2xl bg-slate-50 p-4 dark:bg-slate-850">
+        <div className="mb-6 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-850/80">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 font-bold text-brand-600 dark:bg-brand-950 dark:text-brand-350">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 font-bold text-brand-600 dark:bg-brand-950 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
               {(user?.name || 'U').charAt(0).toUpperCase()}
             </div>
             <div className="overflow-hidden">
-              <p className="truncate text-sm font-semibold text-slate-700 dark:text-slate-200">
+              <p className="truncate text-sm font-bold text-slate-800 dark:text-white">
                 {user?.name || 'User'}
               </p>
-              <span className="inline-block rounded bg-brand-50 px-1.5 py-0.5 text-[10px] font-bold uppercase text-brand-600 dark:bg-brand-950/50 dark:text-brand-300">
+              <span className="inline-block rounded-md bg-brand-100 px-2 py-0.5 text-[10px] font-extrabold uppercase text-brand-700 dark:bg-sky-950 dark:text-sky-300 border border-brand-200 dark:border-sky-800">
                 {user?.role || 'student'}
               </span>
             </div>

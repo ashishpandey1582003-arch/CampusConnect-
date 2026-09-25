@@ -313,21 +313,21 @@ const StudentProfile = () => {
             </p>
 
             {/* Quick Metrics Badges */}
-            <div className="mt-5 grid grid-cols-2 gap-2 rounded-2xl bg-slate-50 p-3 dark:bg-slate-850">
+            <div className="mt-5 grid grid-cols-2 gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-850/90 shadow-sm">
               <div className="text-center">
-                <p className="text-[10px] uppercase font-bold text-slate-400">CGPA</p>
-                <p className="text-base font-extrabold text-slate-800 dark:text-white">{user?.cgpa ?? '-'}</p>
+                <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-400">CGPA</p>
+                <p className="text-base font-extrabold text-slate-800 dark:text-sky-300">{user?.cgpa ?? '-'}</p>
               </div>
               <div className="text-center border-l border-slate-200 dark:border-slate-800">
-                <p className="text-[10px] uppercase font-bold text-slate-400">Year / Sec</p>
-                <p className="text-base font-extrabold text-slate-800 dark:text-white">
+                <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-400">Year / Sec</p>
+                <p className="text-base font-extrabold text-slate-800 dark:text-indigo-300">
                   {user?.year ? `${user.year} yr` : '-'} / {user?.section || '-'}
                 </p>
               </div>
             </div>
 
             {/* Contact Details List */}
-            <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-6 text-left text-xs text-slate-600 dark:border-slate-800 dark:text-slate-350">
+            <div className="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-6 text-left text-xs text-slate-600 dark:border-slate-800 dark:text-slate-300">
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-sky-500 shrink-0" />
                 <span className="truncate">{user?.email}</span>
@@ -352,14 +352,14 @@ const StudentProfile = () => {
                 href={getFullUrl(user.resume)}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-sky-50 py-3 text-xs font-bold text-sky-700 hover:bg-sky-100 dark:bg-sky-950/30 dark:text-sky-300 dark:hover:bg-sky-950/50 transition-colors border border-sky-200 dark:border-sky-900"
+                className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-sky-50 py-3 text-xs font-bold text-sky-700 hover:bg-sky-100 dark:bg-sky-950/40 dark:text-sky-300 dark:hover:bg-sky-950/60 transition-colors border border-sky-200 dark:border-sky-800 shadow-sm"
               >
                 <FileText className="h-4 w-4" />
                 <span>View Current Resume PDF</span>
                 <ExternalLink className="h-3.5 w-3.5 opacity-70" />
               </a>
             ) : (
-              <div className="mt-6 rounded-2xl bg-slate-100 p-3 text-xs text-slate-500 dark:bg-slate-850 dark:text-slate-400">
+              <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-100 p-3 text-xs font-medium text-slate-500 dark:border-slate-800 dark:bg-slate-850 dark:text-slate-400">
                 Resume not uploaded yet
               </div>
             )}
@@ -384,62 +384,27 @@ const StudentProfile = () => {
           )}
 
           {/* Tab Navigation Filter */}
-          <div className="flex items-center gap-2 overflow-x-auto rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-850">
-            <button
-              type="button"
-              onClick={() => setActiveTab('all')}
-              className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${
-                activeTab === 'all'
-                  ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-800 dark:text-white'
-                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              All Sections
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('personal')}
-              className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${
-                activeTab === 'personal'
-                  ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-800 dark:text-white'
-                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              Personal Info
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('academics')}
-              className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${
-                activeTab === 'academics'
-                  ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-800 dark:text-white'
-                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              Academics & College
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('documents')}
-              className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${
-                activeTab === 'documents'
-                  ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-800 dark:text-white'
-                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              Documents & Skills
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('security')}
-              className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${
-                activeTab === 'security'
-                  ? 'bg-white text-slate-900 shadow-sm dark:bg-slate-800 dark:text-white'
-                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              Password & Security
-            </button>
+          <div className="flex items-center gap-2 overflow-x-auto rounded-2xl border border-slate-200/80 bg-slate-100 p-1.5 dark:border-slate-800 dark:bg-slate-900/90 shadow-sm">
+            {[
+              { id: 'all', label: 'All Sections' },
+              { id: 'personal', label: 'Personal Info' },
+              { id: 'academics', label: 'Academics & College' },
+              { id: 'documents', label: 'Documents & Skills' },
+              { id: 'security', label: 'Password & Security' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`whitespace-nowrap rounded-xl px-4 py-2.5 text-xs font-bold transition-all ${
+                  activeTab === tab.id
+                    ? 'bg-white text-slate-900 shadow-md dark:bg-gradient-to-r dark:from-sky-500 dark:to-indigo-600 dark:text-white dark:shadow-md dark:shadow-sky-500/25 border border-slate-200/60 dark:border-transparent'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-800/60'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
 
           <form onSubmit={handleProfileSubmit} className="space-y-6">
@@ -496,7 +461,7 @@ const StudentProfile = () => {
                       value={mobileNo}
                       onChange={(e) => setMobileNo(e.target.value)}
                       placeholder="e.g. 9876543210"
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-850 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
                     />
                     <p className="mt-1 text-[11px] text-slate-400">10-digit mobile contact</p>
                   </div>
@@ -512,7 +477,7 @@ const StudentProfile = () => {
                     <GraduationCap className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-850 dark:text-white">
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white">
                       Academic & University Data Correction
                     </h3>
                     <p className="text-xs text-slate-400">
@@ -532,7 +497,7 @@ const StudentProfile = () => {
                       value={collegeRollNo}
                       onChange={(e) => setCollegeRollNo(e.target.value)}
                       placeholder="e.g. AKTU / College Name"
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-850 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
                     />
                   </div>
 
@@ -546,7 +511,7 @@ const StudentProfile = () => {
                       value={universityRollNo}
                       onChange={(e) => setUniversityRollNo(e.target.value)}
                       placeholder="e.g. 2100970100045"
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-850 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
                     />
                   </div>
 
@@ -558,7 +523,7 @@ const StudentProfile = () => {
                       required
                       value={branch}
                       onChange={(e) => setBranch(e.target.value)}
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-850 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
                     >
                       <option value="">Select Branch</option>
                       {BRANCH_OPTIONS.map((opt) => (
@@ -577,7 +542,7 @@ const StudentProfile = () => {
                       required
                       value={year}
                       onChange={(e) => setYear(e.target.value)}
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-850 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
                     >
                       <option value="">Select Year</option>
                       {YEAR_OPTIONS.map((opt) => (
@@ -598,7 +563,7 @@ const StudentProfile = () => {
                       value={section}
                       onChange={(e) => setSection(e.target.value)}
                       placeholder="e.g. A, B, or C"
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-850 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
                     />
                   </div>
 
@@ -615,7 +580,7 @@ const StudentProfile = () => {
                       value={cgpa}
                       onChange={(e) => setCgpa(e.target.value)}
                       placeholder="e.g. 8.45"
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-850 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
                     />
                     <p className="mt-1 text-[11px] text-slate-400">Recruiter drive eligibility is calculated using this CGPA</p>
                   </div>
@@ -631,7 +596,7 @@ const StudentProfile = () => {
                     <Award className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-slate-850 dark:text-white">Skills & Uploaded Documents</h3>
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white">Skills & Uploaded Documents</h3>
                     <p className="text-xs text-slate-400">Update your resume PDF, profile photo, and core technical skills</p>
                   </div>
                 </div>
@@ -647,7 +612,7 @@ const StudentProfile = () => {
                       value={skills}
                       onChange={(e) => setSkills(e.target.value)}
                       placeholder="e.g. React.js, Node.js, Python, SQL, Git, Problem Solving"
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-850 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all"
                     />
 
                     {/* Skills Chips Preview */}
