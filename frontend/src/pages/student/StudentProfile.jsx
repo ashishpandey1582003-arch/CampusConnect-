@@ -313,14 +313,14 @@ const StudentProfile = () => {
             </p>
 
             {/* Quick Metrics Badges */}
-            <div className="mt-5 grid grid-cols-2 gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-850/90 shadow-sm">
+            <div className="mt-5 grid grid-cols-2 gap-2 rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900 shadow-sm">
               <div className="text-center">
-                <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-400">CGPA</p>
-                <p className="text-base font-extrabold text-slate-800 dark:text-sky-300">{user?.cgpa ?? '-'}</p>
+                <p className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">CGPA</p>
+                <p className="text-base font-extrabold text-slate-800 dark:text-sky-400">{user?.cgpa ?? '-'}</p>
               </div>
               <div className="text-center border-l border-slate-200 dark:border-slate-800">
-                <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-400">Year / Sec</p>
-                <p className="text-base font-extrabold text-slate-800 dark:text-indigo-300">
+                <p className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">Year / Sec</p>
+                <p className="text-base font-extrabold text-slate-800 dark:text-indigo-400">
                   {user?.year ? `${user.year} yr` : '-'} / {user?.section || '-'}
                 </p>
               </div>
@@ -359,7 +359,7 @@ const StudentProfile = () => {
                 <ExternalLink className="h-3.5 w-3.5 opacity-70" />
               </a>
             ) : (
-              <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-100 p-3 text-xs font-medium text-slate-500 dark:border-slate-800 dark:bg-slate-850 dark:text-slate-400">
+              <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-100 p-3 text-xs font-medium text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
                 Resume not uploaded yet
               </div>
             )}
@@ -384,7 +384,7 @@ const StudentProfile = () => {
           )}
 
           {/* Tab Navigation Filter */}
-          <div className="flex items-center gap-2 overflow-x-auto rounded-2xl border border-slate-200/80 bg-slate-100 p-1.5 dark:border-slate-800 dark:bg-slate-900/90 shadow-sm">
+          <div className="flex items-center gap-2 overflow-x-auto rounded-2xl border border-slate-200 bg-slate-100 p-1.5 dark:border-slate-800 dark:bg-slate-900 shadow-sm">
             {[
               { id: 'all', label: 'All Sections' },
               { id: 'personal', label: 'Personal Info' },
@@ -398,8 +398,8 @@ const StudentProfile = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`whitespace-nowrap rounded-xl px-4 py-2.5 text-xs font-bold transition-all ${
                   activeTab === tab.id
-                    ? 'bg-white text-slate-900 shadow-md dark:bg-gradient-to-r dark:from-sky-500 dark:to-indigo-600 dark:text-white dark:shadow-md dark:shadow-sky-500/25 border border-slate-200/60 dark:border-transparent'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-800/60'
+                    ? 'bg-white text-slate-900 shadow-md dark:bg-gradient-to-r dark:from-sky-500 dark:to-indigo-600 dark:text-white dark:shadow-md dark:shadow-sky-500/30 border border-slate-200/60 dark:border-transparent'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/80 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800/80'
                 }`}
               >
                 {tab.label}
