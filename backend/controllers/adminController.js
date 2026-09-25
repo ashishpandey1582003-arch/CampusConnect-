@@ -227,3 +227,48 @@ export const createAdministrator = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @desc    Delete an administrator account
+// @route   DELETE /api/admin/administrators/:id
+// @access  Private/Admin
+export const deleteAdministrator = asyncHandler(async (req, res, next) => {
+  const adminToDelete = await Admin.findById(req.params.id);
+
+  if (!adminToDelete) {
+    return next(new ErrorResponse('Administrator not found', 404));
+  }
+
+  // Prevent admin from deleting their own currently logged-in account
+  if (req.user._id.toString() === adminToDelete._id.toString()) {
+    return next(new ErrorResponse('You cannot delete your own currently active administrator account', 400));
+  }
+
+  // Check how many admins remain
+  const totalAdmins = await Admin.countDocuments();
+  if (totalAdmins <= 1) {
+    return next(new ErrorResponse('Cannot delete the last remaining administrator account in the system', 400));
+  }
+
+  // Preserve activity logs attribution note
+  await ActivityLog.updateMany(
+    { admin: adminToDelete._id },
+    { $set: { details: `[Archived from ${adminToDelete.name} (${adminToDelete.email})]: ` } }
+  );
+
+  await adminToDelete.deleteOne();
+
+  // Log this deletion action
+  await ActivityLog.create({
+    admin: req.user._id,
+    action: 'ADMIN_DELETED',
+    details: `Removed administrator: ${adminToDelete.name} (${adminToDelete.email})`,
+    timestamp: new Date(),
+  });
+
+  res.status(200).json({
+    success: true,
+    message: `Administrator ${adminToDelete.name} (${adminToDelete.email}) deleted successfully`,
+    data: { id: req.params.id },
+  });
+});
+
+

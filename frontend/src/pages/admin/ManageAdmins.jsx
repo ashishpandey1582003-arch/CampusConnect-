@@ -22,6 +22,7 @@ import {
   AlertCircle,
   X,
   Sparkles,
+  Trash2,
 } from 'lucide-react';
 
 const ManageAdmins = () => {
@@ -33,6 +34,8 @@ const ManageAdmins = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('All');
   const [copiedEmail, setCopiedEmail] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
+  const [globalFeedback, setGlobalFeedback] = useState({ type: '', message: '' });
 
   // Add Admin Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -71,6 +74,38 @@ const ManageAdmins = () => {
     navigator.clipboard.writeText(email);
     setCopiedEmail(email);
     setTimeout(() => setCopiedEmail(null), 2000);
+  };
+
+  const handleDeleteAdmin = async (id, name, email) => {
+    if (!window.confirm(`Are you sure you want to remove administrator ${name} (${email})? This action will revoke their system access.`)) {
+      return;
+    }
+
+    setDeletingId(id);
+    setGlobalFeedback({ type: '', message: '' });
+
+    try {
+      const response = await api.delete(`/api/admin/administrators/${id}`);
+      if (response.data.success) {
+        setGlobalFeedback({
+          type: 'success',
+          message: `Administrator ${name} (${email}) was removed successfully.`,
+        });
+        setAdmins((prev) => prev.filter((adm) => adm._id !== id));
+        setSummary((prev) => ({
+          ...prev,
+          totalAdmins: Math.max(0, (prev.totalAdmins || 1) - 1),
+        }));
+      }
+    } catch (err) {
+      setGlobalFeedback({
+        type: 'error',
+        message: err.response?.data?.error || err.response?.data?.message || 'Failed to delete administrator account.',
+      });
+    } finally {
+      setDeletingId(null);
+      setTimeout(() => setGlobalFeedback({ type: '', message: '' }), 5000);
+    }
   };
 
   const handleAddAdminSubmit = async (e) => {
@@ -185,6 +220,24 @@ const ManageAdmins = () => {
         <div className="absolute right-0 top-0 -mr-20 -mt-20 h-64 w-64 rounded-full bg-indigo-500/20 blur-3xl pointer-events-none" />
         <div className="absolute left-1/3 bottom-0 -mb-20 h-48 w-48 rounded-full bg-sky-500/20 blur-3xl pointer-events-none" />
       </div>
+
+      {/* Global Feedback Notification */}
+      {globalFeedback.message && (
+        <div
+          className={`flex items-center gap-3 rounded-2xl p-4 text-xs font-semibold ${
+            globalFeedback.type === 'success'
+              ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-900 dark:text-emerald-300'
+              : 'bg-red-50 text-red-800 border border-red-200 dark:bg-red-950/30 dark:border-red-900 dark:text-red-300'
+          }`}
+        >
+          {globalFeedback.type === 'success' ? (
+            <ShieldCheck className="h-5 w-5 shrink-0 text-emerald-600" />
+          ) : (
+            <AlertCircle className="h-5 w-5 shrink-0 text-red-600" />
+          )}
+          <span>{globalFeedback.message}</span>
+        </div>
+      )}
 
       {/* Overview Stat Cards */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -416,13 +469,28 @@ const ManageAdmins = () => {
                   ID: <span className="font-mono text-[10px]">{adm._id.slice(-6)}</span>
                 </span>
 
-                <Link
-                  to="/admin/logs"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
-                >
-                  <span>View Audit Trail</span>
-                  <ExternalLink className="h-3 w-3" />
-                </Link>
+                <div className="flex items-center gap-2.5">
+                  <Link
+                    to="/admin/logs"
+                    className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
+                  >
+                    <span>Audit Trail</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </Link>
+
+                  {!adm.isCurrentAdmin && (
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteAdmin(adm._id, adm.name, adm.email)}
+                      disabled={deletingId === adm._id}
+                      className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-bold text-red-500 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950/40 dark:hover:text-red-400 disabled:opacity-50 transition-colors cursor-pointer"
+                      title="Remove Administrator"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      <span>{deletingId === adm._id ? '...' : 'Delete'}</span>
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           ))}

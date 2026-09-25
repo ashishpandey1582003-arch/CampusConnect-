@@ -4,6 +4,7 @@ import {
   getActivityLogs,
   getAdministrators,
   createAdministrator,
+  deleteAdministrator,
 } from '../controllers/adminController.js';
 import { protect, authorize } from '../middleware/authMiddleware.js';
 
@@ -15,6 +16,7 @@ router.use(authorize('admin'));
 router.get('/stats', getAdminStats);
 router.get('/logs', getActivityLogs);
 router.route('/administrators').get(getAdministrators).post(createAdministrator);
+router.route('/administrators/:id').delete(deleteAdministrator);
 
 export default router;
 
