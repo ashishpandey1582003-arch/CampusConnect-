@@ -31,6 +31,7 @@ import ManageStudents from './pages/admin/ManageStudents';
 import ApplicationsManager from './pages/admin/ApplicationsManager';
 import NotificationsManager from './pages/admin/NotificationsManager';
 import ActivityLogs from './pages/admin/ActivityLogs';
+import ManageAdmins from './pages/admin/ManageAdmins';
 
 // Common Error Pages
 import NotFound from './pages/common/NotFound';
@@ -76,6 +77,7 @@ function App() {
                 <Route path="/admin/applications/:recruiterId" element={<ApplicationsManager />} />
                 <Route path="/admin/notifications" element={<NotificationsManager />} />
                 <Route path="/admin/logs" element={<ActivityLogs />} />
+                <Route path="/admin/administrators" element={<ManageAdmins />} />
               </Route>
             </Route>
 

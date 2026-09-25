@@ -10,6 +10,7 @@ import {
   ArrowUpRight,
   TrendingUp,
   Award,
+  ShieldCheck,
 } from 'lucide-react';
 import {
   AreaChart,
@@ -32,13 +33,21 @@ const COLORS = ['#0ea5e9', '#a855f7', '#10b981', '#ef4444', '#f59e0b'];
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState(null);
+  const [adminControllers, setAdminControllers] = useState([]);
 
   useEffect(() => {
     const fetchAdminStats = async () => {
       try {
-        const response = await api.get('/api/admin/stats');
-        if (response.data.success) {
-          setStats(response.data.data);
+        const [statsRes, adminsRes] = await Promise.allSettled([
+          api.get('/api/admin/stats'),
+          api.get('/api/admin/administrators'),
+        ]);
+
+        if (statsRes.status === 'fulfilled' && statsRes.value.data.success) {
+          setStats(statsRes.value.data.data);
+        }
+        if (adminsRes.status === 'fulfilled' && adminsRes.value.data.success) {
+          setAdminControllers(adminsRes.value.data.data.administrators || []);
         }
       } catch (err) {
         console.error('Failed to load admin statistics:', err);
@@ -298,6 +307,70 @@ const AdminDashboard = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+          )}
+        </div>
+
+        {/* Active Portal Administrators & Controllers Card */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:col-span-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 border-b border-slate-100 pb-4 dark:border-slate-800">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                  Active Portal Administrators & Controllers
+                </h4>
+                <p className="text-[11px] text-slate-400">
+                  Authorized personnel governing CampusConnect recruitment drives and student data
+                </p>
+              </div>
+            </div>
+            <Link
+              to="/admin/administrators"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-50 px-3.5 py-1.5 text-xs font-bold text-indigo-700 hover:bg-indigo-100 dark:bg-indigo-950/60 dark:text-indigo-300 dark:hover:bg-indigo-900/60 transition-colors self-start sm:self-auto"
+            >
+              <span>View Full Directory</span>
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+
+          {adminControllers.length === 0 ? (
+            <p className="text-xs text-slate-400 py-4 text-center">Loading administrators...</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {adminControllers.map((adm) => (
+                <div
+                  key={adm._id}
+                  className="flex items-center gap-3.5 rounded-2xl border border-slate-100 bg-slate-50/60 p-4 dark:border-slate-800/80 dark:bg-slate-950/60 transition-all hover:border-indigo-200 dark:hover:border-indigo-900/60"
+                >
+                  <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 font-extrabold text-white shadow-sm text-sm">
+                    {(adm.name || 'A').charAt(0).toUpperCase()}
+                    <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border-2 border-white dark:border-slate-900"></span>
+                    </span>
+                  </div>
+                  <div className="overflow-hidden flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{adm.name}</p>
+                      {adm.isCurrentAdmin && (
+                        <span className="rounded-full bg-indigo-500 px-1.5 py-0.2 text-[8px] font-extrabold text-white">
+                          You
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">{adm.email}</p>
+                    <div className="mt-1 flex items-center justify-between text-[10px]">
+                      <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+                        {adm.totalActions} logged actions
+                      </span>
+                      <span className="text-slate-400">{adm.role === 'super_admin' ? 'Super Admin' : 'Admin'}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>

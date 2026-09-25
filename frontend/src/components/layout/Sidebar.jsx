@@ -12,6 +12,7 @@ import {
   FileText,
   Bell,
   Activity,
+  ShieldCheck,
   LogOut,
 } from 'lucide-react';
 
@@ -36,6 +37,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     { name: 'Applications', path: '/admin/applications', icon: FileText },
     { name: 'Notifications', path: '/admin/notifications', icon: Bell },
     { name: 'Activity Logs', path: '/admin/logs', icon: Activity },
+    { name: 'Admin Directory', path: '/admin/administrators', icon: ShieldCheck },
   ];
 
   const links = user.role === 'admin' ? adminLinks : studentLinks;

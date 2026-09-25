@@ -1,8 +1,9 @@
+import Admin from '../models/Admin.js';
 import Student from '../models/Student.js';
 import Recruiter from '../models/Recruiter.js';
 import Application from '../models/Application.js';
 import ActivityLog from '../models/ActivityLog.js';
-import { asyncHandler } from '../middleware/errorMiddleware.js';
+import { ErrorResponse, asyncHandler } from '../middleware/errorMiddleware.js';
 
 // @desc    Get Admin Dashboard Stats and Analytics Chart Data
 // @route   GET /api/admin/stats
@@ -134,3 +135,95 @@ export const getActivityLogs = asyncHandler(async (req, res, next) => {
     data: logs,
   });
 });
+
+// @desc    Get all administrative accounts and system control telemetry
+// @route   GET /api/admin/administrators
+// @access  Private/Admin
+export const getAdministrators = asyncHandler(async (req, res, next) => {
+  const admins = await Admin.find({}, '-password').sort({ createdAt: 1 });
+
+  const enrichedAdmins = await Promise.all(
+    admins.map(async (adm) => {
+      const totalActions = await ActivityLog.countDocuments({ admin: adm._id });
+      const lastLog = await ActivityLog.findOne({ admin: adm._id }).sort({ timestamp: -1 });
+      const recentActions = await ActivityLog.find({ admin: adm._id })
+        .sort({ timestamp: -1 })
+        .limit(3)
+        .select('action details timestamp');
+
+      return {
+        _id: adm._id,
+        name: adm.name,
+        email: adm.email,
+        role: adm.role || 'admin',
+        createdAt: adm.createdAt,
+        updatedAt: adm.updatedAt,
+        totalActions,
+        lastActive: lastLog ? lastLog.timestamp : adm.updatedAt || adm.createdAt,
+        lastAction: lastLog ? `${lastLog.action.split('_').join(' ')}: ${lastLog.details}` : 'Administrator Account Created',
+        recentActions,
+        isCurrentAdmin: req.user._id.toString() === adm._id.toString(),
+      };
+    })
+  );
+
+  const totalLogs = await ActivityLog.countDocuments();
+
+  res.status(200).json({
+    success: true,
+    count: enrichedAdmins.length,
+    data: {
+      administrators: enrichedAdmins,
+      summary: {
+        totalAdmins: enrichedAdmins.length,
+        totalSystemActions: totalLogs,
+        currentAdminId: req.user._id,
+      },
+    },
+  });
+});
+
+// @desc    Add a new administrator (Restricted to logged-in admins)
+// @route   POST /api/admin/administrators
+// @access  Private/Admin
+export const createAdministrator = asyncHandler(async (req, res, next) => {
+  const { name, email, password, role } = req.body;
+
+  if (!name || !email || !password) {
+    return next(new ErrorResponse('Please provide name, email, and password', 400));
+  }
+
+  const cleanEmail = email.trim().toLowerCase();
+  const existing = await Admin.findOne({ email: cleanEmail });
+  if (existing) {
+    return next(new ErrorResponse('An administrator with this email already exists', 400));
+  }
+
+  const newAdmin = await Admin.create({
+    name: name.trim(),
+    email: cleanEmail,
+    password,
+    role: role || 'admin',
+  });
+
+  // Log this administrative action
+  await ActivityLog.create({
+    admin: req.user._id,
+    action: 'ADMIN_CREATED',
+    details: `Added new portal administrator: ${newAdmin.name} (${newAdmin.email})`,
+    timestamp: new Date(),
+  });
+
+  res.status(201).json({
+    success: true,
+    message: 'New administrator added successfully',
+    data: {
+      _id: newAdmin._id,
+      name: newAdmin.name,
+      email: newAdmin.email,
+      role: newAdmin.role,
+      createdAt: newAdmin.createdAt,
+    },
+  });
+});
+
