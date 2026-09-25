@@ -753,7 +753,7 @@ const StudentProfile = () => {
                   <KeyRound className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-850 dark:text-white">Change Account Password</h3>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white">Change Account Password</h3>
                   <p className="text-xs text-slate-400">Keep your login credentials secure</p>
                 </div>
               </div>
@@ -783,7 +783,7 @@ const StudentProfile = () => {
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
                       placeholder="Enter current password"
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-850 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all pr-11"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all pr-11"
                     />
                     <button
                       type="button"
@@ -807,7 +807,7 @@ const StudentProfile = () => {
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                         placeholder="Min 6 chars"
-                        className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-850 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all pr-11"
+                        className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all pr-11"
                       />
                       <button
                         type="button"
@@ -830,7 +830,7 @@ const StudentProfile = () => {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="Re-enter password"
-                        className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-850 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all pr-11"
+                        className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-white focus:border-sky-500 focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all pr-11"
                       />
                       <button
                         type="button"
@@ -843,14 +843,31 @@ const StudentProfile = () => {
                   </div>
                 </div>
 
-                <div className="pt-2">
+                <div className="pt-3 flex flex-wrap items-center gap-4">
                   <button
                     type="submit"
                     disabled={passLoading}
-                    className="inline-flex items-center gap-2 rounded-2xl bg-slate-850 px-6 py-2.5 text-xs font-bold text-white hover:bg-slate-750 dark:bg-slate-800 dark:hover:bg-slate-700 disabled:opacity-50 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-sky-500 to-indigo-600 px-7 py-3 text-sm font-bold text-white shadow-lg shadow-sky-500/25 hover:from-sky-600 hover:to-indigo-700 active:scale-95 disabled:opacity-50 transition-all cursor-pointer"
                   >
-                    {passLoading ? 'Updating Password...' : 'Update Password'}
+                    {passLoading ? (
+                      <>
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                        <span>Updating Password...</span>
+                      </>
+                    ) : (
+                      <>
+                        <KeyRound className="h-4 w-4" />
+                        <span>Save & Update Password</span>
+                      </>
+                    )}
                   </button>
+
+                  {passSuccessMsg && (
+                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-3.5 py-2 rounded-xl">
+                      <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                      {passSuccessMsg}
+                    </span>
+                  )}
                 </div>
               </form>
             </div>
