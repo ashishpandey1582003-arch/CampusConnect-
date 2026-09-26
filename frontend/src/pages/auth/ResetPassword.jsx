@@ -44,14 +44,21 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-sky-400 via-sky-300 to-sky-200 px-4">
-      <div className="w-full max-w-md">
-        <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-8 shadow-2xl backdrop-blur-xl">
+    <div
+      className="relative flex min-h-screen items-center justify-center px-4 py-8 bg-cover bg-center"
+      style={{
+        backgroundImage: `url(${localStorage.getItem('cc_wallpaper') || '/wallpapers/cyber_network.jpg'})`,
+      }}
+    >
+      <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-[2px]"></div>
+
+      <div className="relative z-10 w-full max-w-md">
+        <div className="rounded-3xl border border-white/15 bg-slate-950/80 p-8 shadow-2xl backdrop-blur-2xl ring-1 ring-white/10">
           <div className="mb-6 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-500 text-white shadow-lg">
-              <KeyRound className="h-6 w-6" />
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 text-white shadow-xl shadow-sky-500/30">
+              <KeyRound className="h-7 w-7" />
             </div>
-            <h1 className="text-xl font-bold text-white">Reset Password</h1>
+            <h1 className="text-2xl font-bold text-white">Reset Password</h1>
             <p className="text-xs text-slate-400 mt-1">Configure a new secure password for your account</p>
           </div>
 

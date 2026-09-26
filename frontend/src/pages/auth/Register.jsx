@@ -98,19 +98,26 @@ const Register = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-sky-400 via-sky-300 to-sky-200 px-4 py-12">
+    <div
+      className="relative flex min-h-screen items-center justify-center px-4 py-12 bg-cover bg-center"
+      style={{
+        backgroundImage: `url(${localStorage.getItem('cc_wallpaper') || '/wallpapers/cyber_network.jpg'})`,
+      }}
+    >
+      <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-[2px]"></div>
+
       <div className="relative z-10 w-full max-w-3xl">
         {/* Back Link */}
         <Link
           to="/login"
-          className="mb-4 inline-flex items-center gap-2 text-xs font-bold text-sky-900 hover:text-sky-950 transition-colors"
+          className="mb-4 inline-flex items-center gap-2 rounded-xl bg-slate-900/80 border border-white/10 px-3.5 py-1.5 text-xs font-semibold text-sky-300 hover:text-white hover:bg-slate-800 transition-colors backdrop-blur-md"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Login
         </Link>
 
         {/* Form Container */}
-        <div className="rounded-3xl border border-sky-100 bg-white p-8 shadow-2xl">
+        <div className="rounded-3xl border border-white/15 bg-white/95 dark:bg-slate-950/90 p-8 shadow-2xl backdrop-blur-2xl">
           <div className="mb-8 flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-500 text-white shadow-lg shadow-sky-500/25">
               {role === 'student' ? (
